@@ -70,6 +70,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
+        mMap.setOnPoiClickListener(new GoogleMap.OnPoiClickListener() {
+            @Override
+            public void onPoiClick(PointOfInterest pointOfInterest) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                builder.setTitle(pointOfInterest.name).setMessage("Este ponto está em:\n" + "Latitude: " + pointOfInterest.latLng.latitude
+                        + "\nLongitude: " + pointOfInterest.latLng.longitude).setPositiveButton("Ok", null).create().show();
+            }
+        });
+
     }
 
     private boolean possuiPermissao() {
