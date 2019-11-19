@@ -26,10 +26,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerDragListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMarkerClickListener {
 
@@ -51,10 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }
-
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
     }
@@ -64,8 +61,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         mMap.setMyLocationEnabled(true);
-
-        mMap.setOnMarkerDragListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -78,7 +73,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         + "\nLongitude: " + pointOfInterest.latLng.longitude).setPositiveButton("Ok", null).create().show();
             }
         });
-
     }
 
     private boolean possuiPermissao() {
@@ -95,22 +89,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (location != null) {
-            //Getting longitude and latitude
             longitude = location.getLongitude();
             latitude = location.getLatitude();
 
-            //moving the map to location
             moverMapa();
         }
     }
@@ -127,12 +112,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
@@ -156,24 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        latitude = marker.getPosition().latitude;
-        longitude = marker.getPosition().longitude;
-
-        moverMapa();
-    }
-
-    @Override
     protected void onStart() {
         googleApiClient.connect();
         super.onStart();
@@ -184,5 +145,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleApiClient.disconnect();
         super.onStop();
     }
-
 }
